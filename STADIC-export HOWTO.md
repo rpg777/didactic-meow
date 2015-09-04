@@ -18,7 +18,11 @@ $ git clone https://github.com/Architectural-Lighting-Simulation/STADIC.git .
 $ python ./export.py --boost-prefix src/stadic/
 ```
 
-The script will export the DXGridmaker code and a minimal export of the required Boost libraries to a top-level dir called "stadic-export". This directory and its contents are ready to be folded in with the ```src``` directory of the Radiance repo. ASSuming your **Radiance** and **STADIC** repos are at the same level, then **from the ```stadic``` directory** (where you just ran the export script from), issue:
+The script will export the DXGridmaker code and a minimal export of the required Boost libraries to a top-level dir called "stadic-export". This directory and its contents are ready to be folded in with the ```src``` directory of the Radiance repo. 
+
+##Build
+
+ASSuming your **Radiance** and **STADIC** repos are at the same level, then **from the ```stadic``` directory** (where you just ran the export script from), issue:
 ```
 $ cp -R ../stadic-export/ ../radiance/src/stadic
 ```
