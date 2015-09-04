@@ -60,15 +60,22 @@ qplot(
 Here are a few R plots of DXgridmaker output:
 
 Case One here seems to miss 5 feet of points at the east end:
+
 ![Case One](img/Rplot03.png)
 
+
 Case two has the same issue, even with different x,y spacing:
+
 ![Case Two](img/Rplot.png)
 
+
 The ```-o 0``` option seems to work well in Case Three. What's not obvious in this plot (but is present in the file) is the coincident points along the line defined by (20,0 20,20) are duplicated. This is because the two polygons in the input file are still not being joined. This is a known issue.
+
 ![Case Three](img/Rplot01.png)
 
-Another example without ```-o 0```, but with a small x and y offset. THe eastern points (x > 40) are written out, but the wall offsets are inconsistent. 
+
+Another example without ```-o 0```, but with a small x and y offset. The eastern points (x > 40) are written out, but the wall offsets are inconsistent. 
+
 ![Test One](img/Rplot02.png)
 
 
