@@ -63,7 +63,7 @@ DXgridmaker includes diagnostic plotting options (see ```-v*``` options).
 The following Rscript snippet will make a simple 2D spatial plot of the x,y output:
 ``` R
 library(ggplot2)
-points <- read.csv(file = "./simple.pts", sep = " ", header = FALSE )
+points <- read.csv(file = "./test.pts", sep = " ", header = FALSE )
 points <- points[c(1,2)]
 qplot(
   V1, V2, data=points, 
