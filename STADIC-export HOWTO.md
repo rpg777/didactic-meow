@@ -53,7 +53,7 @@ $ make
 ```
 
 ##Test
-Let's use called ```simple_floor.rad``` for testing:
+Let's use a simple input file called ```simple_floor.rad``` for testing:
 ``` csh
 $ [path_to]/dxgridmaker -f simple_floor.rad [options] > test.pts
 ```
