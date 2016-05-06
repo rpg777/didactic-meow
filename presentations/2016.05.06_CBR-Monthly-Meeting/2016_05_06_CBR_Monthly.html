@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Awesome Space Rockets - Now Give Me Some Money</title>
+    <meta charset="utf-8">
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .blue { color: blue; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 70%;
+        float: right;
+        padding-top: 1em;
+
+      }
+
+      img {
+        float: right;
+        width: 95%;
+        /* border: 1px solid #73AD21; */
+        padding: 2px;
+      }
+
+    </style>
+  
+  </head>
+
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+count: false
+
+# The Measurification of OpenStudio/Radiance
+
+##.red[or: How I Learned to Stop Worrying and Love Scriptable Code]
+
+### Rob Guglielmetti - May 6, 2016
+
+.footnote[
+A Presentation to the Commercial Buildings Research Group Monthly Meeting
+]
+
+---
+class: center, middle, inverse
+count: false
+
+# Background
+---
+
+# Background
+## Client
+* VG Smartglass (nee .blue[SmarterShade]), a Round 1 Finalist
+  * Wells Fargo Innovation Incubator (IN^2) Project
+
+
+## Thing
+* Switchable Polarizing Film
+* Cheap 'Smart Glass'
+
+## Applications
+* Glare Control
+* Retrofit Potential
+  * Stick on existing glazings
+* Energy savings(?(?(?)))
+
+---
+
+layout: false
+.left-column[
+  ## SmarterShade
+  [pro/con]
+]
+.right-column[
+* Linear Shift Polarizing Film
+* View preserving
+* Switchable
+![image](./img/smartershade.png)
+* Limited Visible Light Transmittance on upper end, though...
+![image](./img/concern_dude.jpg)
+
+]
+
+---
+
+class: center, middle, inverse
+count: false
+
+# Da Research
+###[project plan]
+
+---
+
+layout: false
+.left-column[
+  ## Project Plan
+]
+.right-column[
+* Investigate energy savings and glare control potential via "climate sweep"
+  * Large scale analysis of SmarterShade on multiple prototype buildings, climate zones
+
+* Use Radiance to calculate .red[Dynamic Daylight Metrics]
+  * Account for spatial, climate-based daylight distributions
+  * Daylight Autonomy (DA)
+  * Continuous Daylight Autonomy (cDA)
+  * Useful Daylight Illuminance (UDI)
+
+* Compare energy savings and daylight metrics with and without SmarterShade
+]
+
+---
+class: center, middle, inverse
+count: false
+
+# Meanwhile, in OpenStudio...
+---
+.left-column[
+## Meanwhile...
+]
+.right-column[
+## Tedious Model Articulation
+* No automation of adding daylighting objects to models
+* No ability to model shading controls (i.e., no dynamic windows)
+
+## Limited output
+* No daylight metrics
+
+## Limited batch processing
+* Radiance Implementation "glued on" to OS GUI:
+![image](./img/radiance_radio.png)
+* Batch processing only via command line
+
+* .red[No Access] to Measures, PAT, Spreadsheet, OS-Server
+  [this is lame]
+]
+---
+.left-column[
+## Previously...
+##IDEAKit Climate Sweep
+
+]
+.right-column[
+
+### Suboptimal Cluster Computing Resource
+* Three (3) Macbook Pros
+* Coffee
+* Comfy Chair
+* Dog
+
+![image](./img/ideakit_cluster.jpg)
+]
+---
+.left-column[
+## Previously...
+##IDEAKit Climate Sweep
+
+]
+.right-column[
+
+### Manual model generation + Manual process distribution and management = Lean dataset
+* 2 building types
+* 2 climate zones
+* 4 Daylighting ECMs, but very coarse sampling
+
+![image](./img/ideakit_pcp.png)
+]
+---
+.left-column[
+## TODO
+]
+.right-column[
+
+* Support Shading Controls
+  * Switchable Glazing
+  * Daylight Redirection Devices
+  * Traditional (e.g. blinds, shadecloth)
+* "Measureize" the existing Radiance workflow
+  * Radiance can leverage whole OpenStudio ecosystem
+* New measures to add Smartershade, daylighting elements to model automatically
+]
+---
+## Measurification of the Radiance Workflow
+
+Oh man, it was super hard:
+```ruby
+class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
+```
+---
+## Radiance Measure
+* Incorporated new features
+* Accessed via App/PAT GUI:
+
+![image](./img/new_measure_dialog.png)
+---
+class: center, middle, inverse
+count: false
+
+# New Radiance Functionality
+---
+## Support shading devices with BSDFs
+![image](./img/bsdf_dist.png)
+---
+## Save Radiance views of sensors
+![image](./img/model_setup_views.png)
+---
+## Save "debug images" of each window group
+![image](./img/debug_images.png)
+---
+## Calculate daylight illuminance .red[per window group]
+![image](./img/wg_plots.png)
+---
+class: center, middle, inverse
+count: false
+
+# IN2 Work
+---
+.left-column[
+## IN2 Climate Sweep
+]
+.right-column[
+###Proving ground for Radiance Measure
+* Broke OpenStudio Server, when data merges overran available memory
+* added silly hacks to git 'er done, e.g.:
+```ruby
+  # check for number of rmtxop processes
+  def merge_count()
+      return `pgrep rmtxop`.split.size
+  end
+  ...
+  while merge_count() > 2
+      puts "waiting in rmtxop queue..."
+      sleep(5)
+  end
+  rad_command = "dctimestep output/dc/#{wg}.vmx \
+  annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - \
+  > output/ts/#{wg}.ill"
+  exec_statement(rad_command, runner)
+  ```
+* Still broke server
+  * Output overran available storage
+* Ultimately had to reduce the parameter space
+  * 1 building type (Small Office)
+  * 16 climate zones
+  * base case/lighting controls/shading controls (SmarterShade)
+]
+---
+.left-column[
+## Conclusions, Benefits, WhatHaveYou
+]
+.right-column[
+## IN2/SmarterShade
+* Determined ideal use cases for product
+* Verified pre-existing concerns WRT ultimate energy efficiency potential ¯\\__(ツ)__/¯
+
+## NREL
+* Vastly improved the Radiance integration within OpenStudio
+* Added functionality
+  * Works with other measures
+  * PAT
+  * OpenStudio Spreadsheet
+* Simbuild Paper
+]
+---
+class: center, middle, inverse
+count: false
+
+# Thank You.
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '4:3',
+        countIncrementalSlides: false
+
+      });
+
+    </script>
+  </body>
+</html>
