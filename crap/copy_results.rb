@@ -21,7 +21,8 @@ unless File.directory?("_copy_results")
 	Dir.mkdir("_copy_results")
 end
 
-["large_office_central_chiller_gas", "medium_office_packaged_rooftop_vav_with_electric_reheat_gas", "retail_packaged_rooftop_air_conditioner_gas"].each do |indir|
+#["large_office_central_chiller_gas", "medium_office_packaged_rooftop_vav_with_electric_reheat_gas", "retail_packaged_rooftop_air_conditioner_gas"].each do |indir|
+["large_office_central_chiller_gas"].each do |indir|
 
 	puts "Saving run log(s), data, and input file(s) for simulation: \n'#{indir.upcase}'"
 	dest = "_copy_results/#{indir}"
@@ -32,10 +33,10 @@ end
 
 	datapoints = Dir.glob("#{indir}/data_points/*/")
 
-	datapoints_select = 4
+	datapoints_select = 100
 
 	if datapoints.size <= datapoints_select
-		data_copy = datpoints
+		data_copy = datapoints
 		puts "- Saving all (#{datapoints.size} of #{datapoints.size}) datapoints"
 
 	else
