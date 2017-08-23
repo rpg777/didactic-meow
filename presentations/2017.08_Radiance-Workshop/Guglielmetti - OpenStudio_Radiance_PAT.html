@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Integrating Radiance with OpenStudio's Parametric Analysis Tool</title>
+    <meta charset="utf-8">
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      .tiny { font-size: .7em; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .blue { color: blue; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 70%;
+        float: right;
+        padding-top: 1em;
+
+      }
+
+      img {
+        float: right;
+        width: 95%;
+        /* border: 1px solid #73AD21; */
+        padding: 2px;
+      }
+
+    </style>
+  
+  </head>
+
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+
+## 2017 International Radiance Workshop
+
+#.red[Integrating Radiance with OpenStudio's Parametric Analysis Tool]
+
+### Rob Guglielmetti - National Renewable Energy Laboratory - Golden, CO USA
+
+---
+class: center, middle, inverse
+###Obligatory Eclipse Photo! [LAT 39.98, LON -105.24, MAG 0.94, FBL 76]
+![image](./img/eclipse_shoes.jpg)
+
+
+---
+
+# Agenda
+
+* Existing Work (to be leveraged)
+  * The OpenStudio Measure Framework
+  * OpenStudio Analysis Framework (OSAF)
+
+* Case Study, Part I
+  * Problem 
+
+* OpenStudio Radiance Measure
+*  Case Study, Part II
+  * Application
+
+* Conclusions/Next Steps 
+
+* Snacks
+
+---
+
+class: center, middle, inverse
+
+# Existing Work
+
+---
+
+# OpenStudio & Measures
+* Integrated application suite, SDK, and API for parametric building energy modeling
+* Model/API for building energy modeling
+* Application, SketchUp plugin, Parametric Analysis Tool (PAT) 
+* Ruby-based API for model generation, manipulation, and reporting
+* [http://openstudio.net, https://unmethours.com/questions/]
+
+
+# OpenStudio Analysis Framework
+* Containerized OpenStudio instance (and many helper programs) for *large scale analysis* using OpenStudio and measures
+* Spreadsheet-based problem generation, supporting advanced analysis problem generation and sampling (Morris method, LHS, et al.)
+* [https://github.com/NREL/OpenStudio-server, https://github.com/NREL/OpenStudio-analysis-spreadsheet]
+
+---
+
+class: center, middle, inverse
+
+# Case Study, Part I
+###[Da' Problem]
+
+---
+
+layout: false
+.left-column[
+  ## Technology Evaluation
+]
+.right-column[
+* Investigate energy savings and glare control potential via "climate sweep"
+
+* Large scale analysis of the product prototype on multiple, exemplar, commercial building types and climate zones
+
+* Use Radiance to calculate Dynamic Daylight Metrics and account for spatial, climate-based daylight distributions (DA/cDA/UDI)
+
+* Compare energy savings and daylight metrics of study building models with and without product installed
+
+![image](./img/smartershade.png)
+]
+
+---
+class: center, middle, inverse
+count: false
+
+# Meanwhile, in OpenStudio...
+---
+.left-column[
+## Meanwhile...
+]
+.right-column[
+## Tedious Model Creation
+* No automated way to add daylighting objects to models
+* No ability to model shading controls (i.e., no dynamic windows)
+
+## Limited output
+* No daylight metrics
+
+## Limited batch processing
+* Radiance Implementation "glued on" to OS GUI:
+![image](./img/radiance_radio.png)
+* Batch processing only via command line
+* .red[No Access] to Measures, PAT, Spreadsheet, OS-Server
+  [this is lame]
+]
+---
+.left-column[
+## Previously...
+##IDEAKit Climate Sweep
+
+]
+.right-column[
+
+### Suboptimal Cluster Computing Resource
+* Three (3) Macbook Pros
+* Coffee(^n)
+* Comfy Chair
+* Dog (moral support)
+
+.tiny[Job creation, queuing, results collation and processing all performed by one (1) human (not shown).]
+
+![image](./img/ideakit_cluster.jpg)
+]
+---
+.left-column[
+## Previously...
+##IDEAKit Climate Sweep
+
+]
+.right-column[
+
+### Manual model generation + Manual process distribution and management = Lean dataset
+* 2 building types
+* 2 climate zones
+* 4 Daylighting ECMs, but very coarse sampling
+
+![image](./img/ideakit_pcp.png)
+]
+---
+.left-column[
+## #TODO
+]
+.right-column[
+
+* Support Shading Controls
+  * Switchable Glazing
+  * Daylight Redirection Devices
+  * Traditional (e.g. blinds, shadecloth)
+* "Measureize" the existing Radiance workflow
+  * Radiance can leverage entire OpenStudio ecosystem
+* New measures to add daylighting elements to model automatically
+]
+---
+
+class: center, middle, inverse
+count: false
+
+## Measurification of the Radiance Workflow
+
+---
+
+###Oh man, it was super hard! Look:
+```ruby
+class RadianceMeasure < OpenStudio::Ruleset::ModelUserScript
+```
+
+* The OpenStudio API offers a macro* class for easy script generation within the OpenStudio application ecosystem
+
+
+.footnote[.tiny[*Some folks call 'em macros, or scripts; we call 'em measures .tiny[(mmm-hmmm)].]]
+
+---
+
+## Radiance Measure
+Radiance simulation workflow can by applied via OpenStudio Application:
+
+![image](./img/new_measure_dialog.png)
+
+---
+
+## Radiance Measure
+...or via the Parametric Analysis Tool:
+
+![image](./img/PAT_radiance.png)
+
+---
+
+class: center, middle, inverse
+count: false
+
+# New Radiance Functionality
+
+---
+
+##Support for dynamic windows in OpenStudio
+
+Complex fenestration with bidirectional scatter distribution functions (BSDFs)
+* Blinds
+* Shadecloth
+* Daylight Redirecting Devices
+
+Dynamic glazings via multi-pass Radiance runs 
+* Traditional Radiance materials .red[glass] and .red[trans] materials
+
+![image](./img/bsdf_dist.png)
+---
+
+##Generate sensor views of models, with Radiance
+![image](./img/model_setup_views.png)
+
+---
+## Generate "debug images" of each window group
+![image](./img/debug_images.png)
+---
+## Calculate daylight illuminance .red[per window group]
+![image](./img/wg_plots.png)
+---
+class: center, middle, inverse
+count: false
+
+# Case Study Part II
+---
+.left-column[
+## IN2 Climate Sweep
+]
+.right-column[
+###Proving ground for Radiance Measure
+* Broke OpenStudio Server
+  * Data merges overran available memory
+* added silly hacks to git'er done, e.g.:
+```ruby
+  # check for number of rmtxop processes
+  def merge_count()
+      return `pgrep rmtxop`.split.size
+  end
+  ...
+  while merge_count() > 2
+      puts "waiting in rmtxop queue..."
+      sleep(5)
+  end
+  rad_command = "dctimestep output/dc/#{wg}.vmx \
+  annual-sky.mtx | rmtxop -fa -c 47.4 120 11.6 - \
+  > output/ts/#{wg}.ill"
+  exec_statement(rad_command, runner)
+  ```
+* Still broke server
+  * Output overran available storage
+* Ultimately had to reduce the parameter space
+  * 1 building type (Small Office)
+  * 16 climate zones
+  * base case/lighting controls/shading controls (SmarterShade)
+]
+---
+
+class: center, middle, inverse
+count: false
+
+## Conclusions, Benefits, WhatHaveYou
+
+---
+
+.left-column[
+## Benefits
+]
+.right-column[
+## Wells Fargo IN2 Project
+* Determined ideal use cases for product
+* Verified pre-existing concerns WRT ultimate energy efficiency potential ¯\\__(ツ)__/¯
+
+## NREL
+* Vastly improved the Radiance integration within OpenStudio
+* Added functionality
+  * Works with other measures (e.g. in a parametric matrix)
+  * PAT
+  * OpenStudio Spreadsheet
+]
+---
+
+.left-column[
+## Conclusions
+]
+.right-column[
+###"Just because you can, doesn't mean you should."
+
+Running Radiance on an entire building, at a resolution to support complex fenestration devices AND dynamic daylight metrics, is intractible:
+* Not enough time
+* Not enough memory (RAM)
+* Not enough storage
+
+The "cloud" is of little help; it just masks the mountain.
+![image](./img/crash.jpg)
+]
+
+---
+.left-column[
+## Next Steps
+]
+.right-column[
+
+###Give users ability to:
+* Tag spaces (or groups of spaces) for Radiance analysis
+* Apply shade & lighting schedules from exemplar spaces to similar spaces
+
+### Add new measures for:
+* Simple reporting of static data
+* Interractive data browsing and manipulation (e.g. sensor setpoint optimization)
+
+### What Else?
+* Many presentations this week have illustrated these issues remain
+* Any Takers?
+* Partnerships?
+* Bueller?
+]
+
+---
+
+class: center, middle, inverse
+count: false
+
+# The good news...
+
+---
+
+class: center, middle
+count: true
+
+## New Radiance Packages [Windows too!]
+![image](./img/git_listing.png)
+
+---
+
+# Acknowledgements
+
+###This work was made possible with the support of the following individuals and organizations:
+* Greg Ward, for like, everything (duh.)
+* US Department of Energy, Buildings Technology Office (BTO)
+* Jason DeGraw (NREL), for Windows build assistance
+* Mostapha Sadeghipour Roudsari (Uni of Pennsylvania), for actually using OpenStudio's API
+* Every one of my colleagues in the Commercial Buildings Research Group at NREL
+* The Radiance community at large; you are all an inspiration to me
+
+[In addition, several features of the Radiance Measure were developed for work under the Wells Fargo Innovation Incubator (IN^2) project.]
+
+
+---
+
+class: center, middle, inverse
+count: false
+
+# Questions?
+## robert.guglielmetti@nrel.gov
+### [thank you.]
+
+
+    </textarea>
+    <script src="./remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        /*4:3, 16:9*/
+        ratio: '4:3',
+        countIncrementalSlides: false
+
+      });
+
+    </script>
+  </body>
+</html>
