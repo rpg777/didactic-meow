@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Automatic for the People - Automated Build/Test/Packaging for Radiance</title>
+    <meta charset="utf-8">
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      .tiny { font-size: .7em; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .blue { color: blue; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 70%;
+        float: right;
+        padding-top: 1em;
+
+      }
+
+      img {
+        float: right;
+        width: 95%;
+        /* border: 1px solid #73AD21; */
+        padding: 2px;
+      }
+
+    </style>
+  
+  </head>
+
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+
+## 2018 International Radiance Workshop
+
+#.red[Automatic for the People - Automated Build/Test/Packaging for Radiance]
+
+### Rob Guglielmetti
+### [National Renewable Energy Laboratory - Golden, CO USA]
+
+---
+
+
+# Outline
+
+##Continuous Integration (CI) for Radiance
+- Motivation, definition, etc.
+- Implementation
+  - Workflow
+  - GitHub Mirror
+  - GitLabCI
+- Case Study
+- Next Steps
+
+---
+
+class: center, middle, inverse
+
+# Motivation
+
+---
+
+# Motivation
+* OpenStudio project (NREL 2010)
+* Cross platform, most users on Windows
+* Other efforts:
+   - Axel Jacobs (last update ~2016)
+   - Francesco Anselmo (mingw, ~2008, no rvu, etc)
+   - Georg Mischler (Rayfront ~2002, Windows rvu!)
+   - LBNL Desktop Radiance (2000?)
+
+### Needed easy way to produce reliable, cross-platform Radiance installers, keep up with HEAD 
+- Windows versions of GUI apps e.g. rvu
+- Releases tied to OpenStudio releases
+- CMake build system (implemented ~2013)
+
+---
+
+class: center, middle, inverse
+
+# How it Works
+###[GitHub, GitlabCI, CMake]
+
+---
+
+## Workflow
+
+![image](./img/uml.png)
+
+---
+
+## GitHub Mirror of CVS
+
+![image](./img/git_mirror_01.png)
+
+---
+
+## GitHub Releases Page
+
+![image](./img/git_mirror_02.png)
+
+---
+
+## GitHub Issues Page
+
+![image](./img/gh_issues_01.png)
+
+---
+## GitHub Issues Page (cont'd.)
+
+![image](./img/gh_issues_02.png)
+
+
+---
+
+.left-column[
+## GitLabCI
+
+]
+.right-column[
+
+### Continuous Integration
+* Monitors Git Repo
+* Any change trigers new build/test/deploy
+
+![image](./img/gitlab_wf.png)
+]
+
+---
+
+##GitLabCI - Projects Page (overview)
+
+![image](./img/wf_01.png)
+
+---
+
+##GitLabCI - Project Detail
+
+![image](./img/wf_02.png)
+
+---
+
+class: center, middle, inverse
+count: false
+
+## The GitLabCI Experience
+### [and a case study]
+
+---
+
+##Prologue
+```ruby
+From:   Jan
+To:     Greg, Rob
+Date:   Friday, Aug 31 2018
+
+
+Hi Greg,
+
+I have some small changes to evalglare (change of default values) and an
+extended version of gendaylit (color option included). Both should
+compile without problems (I tested it and had also only small changes).
+
+If you have time, please include them into the CVS.
+
+Important: gendaylit needs now a second cal file (for the colored
+option, so please add the perezlum_c.cal to the lib folder).
+
+Both tools have also updated manpages which are also included in the tar
+files.
+
+Thx!
+
+See you on Monday!
+
+best
+
+Jan
+```
+
+---
+
+##GitLabCI - Build fail
+
+![image](./img/wf_03.png)
+
+---
+##GitLabCI - Build fail - STDOUT
+
+![image](./img/wf_04.png)
+
+---
+##GitLabCI - CVS add
+
+![image](./img/wf_05.png)
+
+---
+##GitLabCI - Build Success
+
+![image](./img/wf_06.png)
+
+---
+##GitLabCI - Tests Passed, Make new release?
+
+![image](./img/wf_07.png)
+
+---
+
+## New 'Workshop Edition' Release
+
+![image](./img/release.png)
+
+---
+
+##Next Steps
+
+### More Testing
+* Currently the CMake Test suite is a handful of regression, and simple sanity tests
+* Need more tests, more coverage
+* There is some DOE funding for this in FY19!
+
+### Improved Packages
+* Still missing some supplemental files
+  * `picture.cal` `dirt.cal` (and more!)
+* Better control of setting `PATH`, `RAYPATH`, other env vars (Mac)
+* Build pdfs of manpages for Windows users
+  * Mac/Linux get manpages installed to `[radiance_install_dir]/man` automatically
+
+---
+
+##Next Steps (Cont'd.)
+
+### More Package Options
+* Better linux package options
+  * Current "installer" is just a tarball of 64-bit executables and libs built on Ubuntu
+  * Randolph Fritz working on a MacPorts "port" for Radiance
+  * Other packages? (rpm? brew? what? WHAT!?)
+
+### More Automation
+* Automatic Package Posting?
+* Iteration builds (i.e. last successful HEAD commit always available)?
+
+### Documentation
+* Help individual users make their own builds
+* User-level repository
+---
+
+## Bonus Slide
+### Your own Private Repo
+1. Clone the NREL Git repository:
+```csh
+$ git clone https://github.com/NREL/Radiance.git
+```
+2. Refresh your local copy whenever you want:
+```csh
+$ git cvsimport -o master -v -d \
+:pserver:anonymous@radiance-online.org:/home/cvsd/radiance \
+-A ../authors.txt -a ray
+```
+.footnote[.tiny[authors.txt = maps CSH logins to GitHub usernames]]
+
+---
+## Bonus Slide 2
+### What's a test?
+
+```csh
+execute_process(
+  WORKING_DIRECTORY ${test_output_dir}
+  COMMAND evalglare${CMAKE_EXECUTABLE_SUFFIX} -L 400 500 0.6 1.2 -B 0.4 \
+  -b 2500 -d -c outputimage.hdr ${resources_dir}/evalglare/testimage.hdr
+  OUTPUT_FILE evalglare_out.txt
+  RESULT_VARIABLE res
+)
+
+file(READ ${test_output_dir}/evalglare_out.txt test_output)
+if(test_output MATCHES "band:band_omega,band_av_lum,band_median_lum, \
+band_std_lum,band_perc_75,band_perc_95,band_lum_min,band_lum_max: \
+2.423399 2353.496003 1339.703125 2218.441248 3993.937463 5750.375098 \
+68.348633 37142.499489")
+  message(STATUS "passed")
+else()
+  message(STATUS "failed")
+endif()
+```
+
+---
+
+class: center, middle, inverse
+count: false
+
+# Questions?
+## robert.guglielmetti@nrel.gov
+### www.nrel.gov/buildings
+
+### github.com/NREL/Radiance
+
+## rob.guglielmetti@gmail.com
+### www.luminousbits.com
+
+### [thank you.[!]]
+
+--
+
+
+    </textarea>
+    <script src="./remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        /*4:3, 16:9*/
+        ratio: '4:3',
+        countIncrementalSlides: false
+
+      });
+
+    </script>
+  </body>
+</html>
