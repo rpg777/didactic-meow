@@ -1,8 +1,8 @@
 # release_stats.rb
 # parse Radiance releases from NREL's GitHub Repo
 # 2018.10.15 R. Guglielmetti
+# 2018.10.19 works directly with stdout, no temp files. - RPG
 # https://api.github.com/repos/NREL/Radiance/releases
-# TODO: work directly with wget data, eliminate temp file save/delete
 # USAGE: ruby release_stats.rb
 
 require 'json'
@@ -10,12 +10,12 @@ require 'open3'
 
 tempdata = "z_release_tempdata"
 
-stdout,stderr,status = Open3.capture3("wget https://api.github.com/repos/NREL/Radiance/releases --output-document=#{tempdata}")
+stdout,stderr,status = Open3.capture3("wget -O - https://api.github.com/repos/NREL/Radiance/releases")
+
 STDERR.puts stderr
 if status.success?
 
-    file = File.read(tempdata)
-    releases = JSON.parse(file)
+    releases = JSON.parse(stdout)
     puts "#{releases.size} releases:"
     releases.each do |rel|
 
@@ -30,11 +30,14 @@ if status.success?
 
         puts "\tTotal downloads: #{dl}"
         puts
+
     end
 
-    puts "deleting tempfile '#{tempdata}'"
-    File.delete(tempdata) 
+    puts "Done."
 
 else
-  STDERR.puts "Error downloading stats"
+
+  STDERR.puts "Error downloading data."
+
 end
+
